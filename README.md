@@ -1,3 +1,3 @@
-# Queue-Board  [![Build Status](https://travis-ci.org/Dallas-Makerspace/Queue-Board.svg?branch=master)](https://travis-ci.org/Dallas-Makerspace/Queue-Board)
+# Queue-Board  [![Build Status](https://travis-ci.org/Dallas-Makerspace/Queue-Board.svg?branch=master)](https://travis-ci.org/Dallas-Makerspace/Queue-Board)[![License](https://img.shields.io/github/license/Dallas-Makerspace/Queue-Board.svg?style=flat-square)](https://github.com/Dallas-Makerspace/Queue-Board/blob/master/LICENSE) [![Coverage Status](https://coveralls.io/repos/github/Dallas-Makerspace/Queue-Board/badge.svg?branch=master)](https://coveralls.io/github/Dallas-Makerspace/Queue-Board?branch=master)[![Release](https://img.shields.io/github/tag/Dallas-Makerspace/Queue-Board.svg?style=flat-square)](https://github.com/Dallas-Makerspace/Queue-Board/tags)
 
 Per Committee Queuing board app
