@@ -1,0 +1,158 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.swagger</groupId>
+    <artifactId>swagger-spring</artifactId>
+    <packaging>jar</packaging>
+    <!--packaging>war</packaging-->
+    <name>swagger-spring</name>
+    <version>1.0.0</version>
+    <properties>
+        <java.version>1.7</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <springfox-version>2.7.0</springfox-version>
+    </properties>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.4.RELEASE</version>
+    </parent>
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                  <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+              
+            <!-- Unzip New Relic Java agent into project.build.directory -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                  <execution>
+                    <id>unpack-zip</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                      <goal>unpack-dependencies</goal>
+                    </goals>
+                    <configuration>
+                      <artifactItems>
+                        <artifactItem>
+                          <groupId>com.newrelic.agent.java</groupId>
+                          <artifactId>newrelic-java</artifactId>
+                          <version>3.38.0</version>
+                          <type>zip</type>
+                          <overWrite>true</overWrite>
+                          <outputDirectory>${project.build.directory}</outputDirectory>
+                          <destFileName>newrelic</destFileName>
+                        </artifactItem>
+                      </artifactItems>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                    </configuration>
+                  </execution>
+                </executions>
+            </plugin>
+              
+            <!-- Push test coverage to coveralls -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.0.0</version>
+                <configuration>
+                    <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
+                </configuration>
+            </plugin>
+    
+        </plugins>
+    </build>
+    <dependencies>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--SpringFox dependencies -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.joschi.jackson</groupId>
+            <artifactId>jackson-datatype-threetenbp</artifactId>
+            <version>2.6.4</version>
+        </dependency>
+        
+        <!-- jUnit for unit testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Mockito for mocking dependencies -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+      
+        <!-- https://mvnrepository.com/artifact/com.newrelic.agent.java/newrelic-java -->
+        <dependency>
+            <groupId>com.newrelic.agent.java</groupId>
+            <artifactId>newrelic-java</artifactId>
+            <version>3.38.0</version>
+            <scope>provided</scope>
+            <type>zip</type>
+        </dependency>   
+        
+        <!-- Logentries logger -->
+        <!-- https://docs.logentries.com/docs/java-util-logging -->
+        <dependency>
+            <groupId>com.logentries</groupId>
+            <artifactId>logentries-appender</artifactId>
+            <version>1.1.29</version>
+        </dependency>
+    
+        <!-- Bean Validation API support -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+</project>

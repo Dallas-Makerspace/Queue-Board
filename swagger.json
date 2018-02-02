@@ -1,0 +1,201 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "DMS Commiittee Resource Queue Board API",
+    "version" : "0.0.1",
+    "title" : "Queue Board API",
+    "contact" : {
+      "email" : "infrastructure@dallasmakerspace.org"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://github.com/Dallas-Makerspace/Queue-Board/blob/master/LICENSE"
+    }
+  },
+  "host" : "dms-queue-board.herokuapp.com",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "developers",
+    "description" : "Operations available to regular developers"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/{id}" : {
+      "get" : {
+        "summary" : "displays user by id",
+        "description" : "List a single user by queue Id\n",
+        "operationId" : "showUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "developers" ],
+        "summary" : "removes a user",
+        "description" : "Removes a user from the queue",
+        "operationId" : "destroyUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Which user to remove by queue Id\n",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "displays queue",
+        "description" : "List users in queue\n",
+        "operationId" : "indexUsers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "timestamp",
+          "in" : "query",
+          "description" : "pass an optional search string for looking up user by timestamp",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "description" : "pass an optional search string for looking up user by name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50.0,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/QueueItem"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "adds an queue item",
+        "description" : "Adds a user to the queue",
+        "operationId" : "newUsers",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "user",
+          "description" : "User to add to to the queue",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/QueueItem"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "item created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing user already exists"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "admins" ],
+        "summary" : "removes a user",
+        "description" : "Removes a user from the queue",
+        "operationId" : "destroyUsers",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "user",
+          "description" : "User to remove in queue",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/QueueItem"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "QueueItem" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "J Q Maker"
+        },
+        "releaseDate" : {
+          "type" : "string",
+          "format" : "int32",
+          "example" : "2016-08-29T09:12:33.001Z"
+        }
+      },
+      "example" : {
+        "releaseDate" : "2016-08-29T09:12:33.001Z",
+        "name" : "J Q Maker",
+        "id" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      }
+    }
+  }
+}
