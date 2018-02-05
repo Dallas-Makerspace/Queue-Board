@@ -12,9 +12,15 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+buildscript {
+    dependencies {
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+    }
+}
+
 
 repositories {
-        
+
      maven { url "http://repo.maven.apache.org/maven2" }
 }
 

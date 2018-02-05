@@ -1,15 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.swagger</groupId>
-    <artifactId>swagger-spring</artifactId>
+    <groupId>ms.dallas</groupId>
+    <artifactId>queue-board</artifactId>
     <packaging>jar</packaging>
     <!--packaging>war</packaging-->
-    <name>swagger-spring</name>
-    <version>1.0.0</version>
+    <name>queue-board</name>
+    <version>0.0.1</version>
     <properties>
         <java.version>1.7</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <docker.image.prefix>springio</docker.image.prefix>
         <springfox-version>2.7.0</springfox-version>
     </properties>
     <parent>
@@ -41,7 +42,7 @@
                   <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-              
+
             <!-- Unzip New Relic Java agent into project.build.directory -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -71,7 +72,7 @@
                   </execution>
                 </executions>
             </plugin>
-              
+
             <!-- Push test coverage to coveralls -->
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
@@ -81,11 +82,29 @@
                     <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
                 </configuration>
             </plugin>
-    
+
+            <!-- Spring Docker intergration -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.2.3</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
     <dependencies>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -112,7 +131,7 @@
             <artifactId>jackson-datatype-threetenbp</artifactId>
             <version>2.6.4</version>
         </dependency>
-        
+
         <!-- jUnit for unit testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -120,7 +139,7 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Mockito for mocking dependencies -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -128,7 +147,7 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-      
+
         <!-- https://mvnrepository.com/artifact/com.newrelic.agent.java/newrelic-java -->
         <dependency>
             <groupId>com.newrelic.agent.java</groupId>
@@ -136,8 +155,8 @@
             <version>3.38.0</version>
             <scope>provided</scope>
             <type>zip</type>
-        </dependency>   
-        
+        </dependency>
+
         <!-- Logentries logger -->
         <!-- https://docs.logentries.com/docs/java-util-logging -->
         <dependency>
@@ -145,7 +164,7 @@
             <artifactId>logentries-appender</artifactId>
             <version>1.1.29</version>
         </dependency>
-    
+
         <!-- Bean Validation API support -->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -154,5 +173,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
+
 </project>
